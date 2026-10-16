@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#050505"><title>TXG Information • Crimson X</title><link rel="stylesheet" href="/style.css"></head>
+<body><header class="top"><a class="brand" href="#"><span class="logo">TXG</span><span>INFORMATION<small>CRIMSON X / PUBLIC DATA SYSTEM</small></span></a><button class="admin-btn" id="adminOpen">ADMIN LOGIN</button></header>
+<main><section class="hero"><div class="eyebrow">◈ PUBLIC INFORMATION NETWORK</div><h1>CRIMSON <b>X</b></h1><p>Public data tools. Custom API endpoints. One command center.</p><div class="hero-line"></div></section>
+<section class="dashboard">
+<div class="screen"><div class="screen-label">01 / ALL APIS</div><div class="screen-title">API DIRECTORY <span id="apiCountSmall">0 APIs</span></div><div id="apiList" class="api-list"></div></div>
+<div class="sidecards">
+<button class="stat-card" data-action="all"><span class="num">01</span><strong>ALL APIS</strong><small>Browse every API</small></button>
+<button class="stat-card" data-action="add"><span class="num">02</span><strong>ADD NEW API</strong><small>Connect your endpoint</small></button>
+<button class="stat-card" data-action="count"><span class="num" id="totalCount">00</span><strong>TOTAL APIS</strong><small>Saved API count</small></button>
+<button class="stat-card" data-action="special"><span class="num">04</span><strong>SPECIAL ZONE</strong><small>Favourite APIs</small></button>
+<button class="stat-card remove-card" data-action="remove"><span class="num">05</span><strong>REMOVE APIS</strong><small>Manage saved APIs</small></button>
+</div></section>
+<section class="builtins"><div class="section-title"><span>BUILT-IN TOOLS</span><small>PUBLIC LOOKUPS</small></div><div class="builtin-grid">
+<button data-tool="ip"><b>IP</b><span>IP Metadata</span></button><button data-tool="dns"><b>DNS</b><span>DNS Records</span></button><button data-tool="url"><b>URL</b><span>URL Inspector</span></button><button data-tool="pin"><b>PIN</b><span>India PIN</span></button><button data-tool="ifsc"><b>₹</b><span>IFSC Lookup</span></button>
+</div></section>
+<section class="output"><div class="section-title"><span id="outputTitle">RESULT CONSOLE</span><small id="outputState">READY</small></div><div id="outputBody">Choose an API or built-in tool to begin.</div></section>
+</main><footer><span>TXG INFORMATION</span><span>CRIMSON X <b>◆</b> SERVER-SIDE API ROUTING</span></footer>
+<div class="modal hidden" id="modal"><div class="modal-card"><button class="close" id="modalClose">×</button><div class="eyebrow">ADMIN CONTROL</div><h2 id="modalTitle">Admin Login</h2><div id="modalContent"></div></div></div>
+<script src="/app.js"></script></body></html>
