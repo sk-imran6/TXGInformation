@@ -1,20 +1,236 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#050505"><title>TXG Information • Crimson X</title><link rel="stylesheet" href="/style.css"></head>
-<body><header class="top"><a class="brand" href="#"><span class="logo">TXG</span><span>INFORMATION<small>CRIMSON X / PUBLIC DATA SYSTEM</small></span></a><button class="admin-btn" id="adminOpen">ADMIN LOGIN</button></header>
-<main><section class="hero"><div class="eyebrow">◈ PUBLIC INFORMATION NETWORK</div><h1>CRIMSON <b>X</b></h1><p>Public data tools. Custom API endpoints. One command center.</p><div class="hero-line"></div></section>
-<section class="dashboard">
-<div class="screen"><div class="screen-label">01 / ALL APIS</div><div class="screen-title">API DIRECTORY <span id="apiCountSmall">0 APIs</span></div><div id="apiList" class="api-list"></div></div>
-<div class="sidecards">
-<button class="stat-card" data-action="all"><span class="num">01</span><strong>ALL APIS</strong><small>Browse every API</small></button>
-<button class="stat-card" data-action="add"><span class="num">02</span><strong>ADD NEW API</strong><small>Connect your endpoint</small></button>
-<button class="stat-card" data-action="count"><span class="num" id="totalCount">00</span><strong>TOTAL APIS</strong><small>Saved API count</small></button>
-<button class="stat-card" data-action="special"><span class="num">04</span><strong>SPECIAL ZONE</strong><small>Favourite APIs</small></button>
-<button class="stat-card remove-card" data-action="remove"><span class="num">05</span><strong>REMOVE APIS</strong><small>Manage saved APIs</small></button>
-</div></section>
-<section class="builtins"><div class="section-title"><span>BUILT-IN TOOLS</span><small>PUBLIC LOOKUPS</small></div><div class="builtin-grid">
-<button data-tool="ip"><b>IP</b><span>IP Metadata</span></button><button data-tool="dns"><b>DNS</b><span>DNS Records</span></button><button data-tool="url"><b>URL</b><span>URL Inspector</span></button><button data-tool="pin"><b>PIN</b><span>India PIN</span></button><button data-tool="ifsc"><b>₹</b><span>IFSC Lookup</span></button>
-</div></section>
-<section class="output"><div class="section-title"><span id="outputTitle">RESULT CONSOLE</span><small id="outputState">READY</small></div><div id="outputBody">Choose an API or built-in tool to begin.</div></section>
-</main><footer><span>TXG INFORMATION</span><span>CRIMSON X <b>◆</b> SERVER-SIDE API ROUTING</span></footer>
-<div class="modal hidden" id="modal"><div class="modal-card"><button class="close" id="modalClose">×</button><div class="eyebrow">ADMIN CONTROL</div><h2 id="modalTitle">Admin Login</h2><div id="modalContent"></div></div></div>
-<script src="/app.js"></script></body></html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TXG Information</title>
+<style>
+:root{color-scheme:dark;--gold:#e9bd62;--bg:#080a0f;--panel:#11151d;--line:#35303a}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 50% 0,#302416 0,#080a0f 55%);color:#f6f2e9;font-family:system-ui,Arial,sans-serif;min-height:100vh}
+header{text-align:center;padding:30px 16px 18px}
+.logo{font-size:clamp(35px,9vw,65px);font-weight:950;letter-spacing:8px;color:var(--gold);text-shadow:0 0 22px #d49c3c55;animation:glow 3s infinite alternate}
+@keyframes glow{to{text-shadow:0 0 35px #e9bd6299}}
+.sub{color:#a7a5a0;letter-spacing:4px;font-size:11px}
+main{max-width:760px;margin:auto;padding:10px 16px 45px}
+.panel{background:#10141cdd;border:1px solid var(--line);border-radius:17px;padding:20px;margin:14px 0;box-shadow:0 12px 40px #0005}
+h2{font-size:16px;color:var(--gold);letter-spacing:2px;margin:0 0 16px}
+input,textarea,select{width:100%;padding:13px;margin:6px 0 12px;border:1px solid #393b43;border-radius:9px;background:#090c12;color:white;font:inherit}
+textarea{min-height:110px;resize:vertical}
+button{border:1px solid #c89c48;background:linear-gradient(120deg,#f1ce7c,#b47a27);color:#17110a;padding:12px 16px;border-radius:9px;font-weight:800;cursor:pointer}
+button.secondary{background:#171b24;color:#e9bd62;border-color:#51432d}
+button.danger{background:#2a1517;color:#ff9c9c;border-color:#74363b}
+button:disabled{opacity:.5;cursor:wait}
+.row{display:flex;gap:9px;flex-wrap:wrap}
+.row>*{flex:1}
+.api{border:1px solid #343640;border-radius:12px;padding:14px;margin:10px 0;background:#0b0e14}
+.api strong{color:#f1d28b;overflow-wrap:anywhere}
+.small{font-size:12px;color:#9b9da6;overflow-wrap:anywhere}
+.hidden{display:none!important}
+#notice{white-space:pre-wrap;color:#f1ce7c;margin:12px 0}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;background:#07090d;border:1px solid #30323a;border-radius:10px;padding:14px;max-height:500px;overflow:auto;font-size:12px;color:#d9e7d8}
+footer{text-align:center;color:#747681;font-size:11px;padding:18px;letter-spacing:2px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">#TXG</div>
+  <div class="sub">INFORMATION SYSTEM</div>
+</header>
+<main>
+  <div id="loginPanel" class="panel">
+    <h2>SECURE LOGIN</h2>
+    <p class="small">Enter your TXG dashboard password.</p>
+    <form id="loginForm">
+      <input id="password" type="password" placeholder="Dashboard password" required autocomplete="current-password">
+      <button type="submit">LOGIN TO DASHBOARD</button>
+    </form>
+  </div>
+
+  <section id="dashboard" class="hidden">
+    <div class="panel">
+      <div class="row" style="align-items:center">
+        <h2 style="margin:0;flex:2">API DASHBOARD</h2>
+        <button id="logout" class="secondary">LOGOUT</button>
+      </div>
+      <p class="small">Select an API, enter a message, and view its returned response.</p>
+      <div id="apiList"></div>
+    </div>
+
+    <div id="requestPanel" class="panel hidden">
+      <h2 id="selectedName">SEND REQUEST</h2>
+      <label for="message">Message</label>
+      <textarea id="message" maxlength="5000" placeholder="Enter your message..."></textarea>
+      <button id="send">SEND REQUEST</button>
+      <h2 style="margin-top:22px">API RESPONSE</h2>
+      <div id="responseMeta" class="small"></div>
+      <pre id="response">The response will appear here.</pre>
+    </div>
+
+    <div class="panel">
+      <h2>ADD API</h2>
+      <form id="addForm">
+        <label for="apiName">API name</label>
+        <input id="apiName" maxlength="60" placeholder="Example: Public Search API" required>
+        <label for="apiUrl">HTTPS API endpoint</label>
+        <input id="apiUrl" type="url" placeholder="https://api.example.com/search" required>
+        <label for="method">HTTP method</label>
+        <select id="method"><option value="POST">POST — JSON message body</option><option value="GET">GET — message query parameter</option></select>
+        <button type="submit">+ ADD API</button>
+      </form>
+      <p class="small">Only add APIs you own or are authorized to use. GET sends ?message=...; POST sends {"message":"..."}.</p>
+    </div>
+  </section>
+  <div id="notice" role="status"></div>
+</main>
+<footer>TXG INFORMATION · SECURE API CONSOLE</footer>
+<script>
+const $ = id => document.getElementById(id);
+let apis = [];
+let selected = null;
+let busy = false;
+
+async function apiFetch(path, options={}) {
+  const response = await fetch(path, {
+    credentials: "same-origin",
+    ...options,
+    headers: {"Content-Type":"application/json", ...(options.headers||{})}
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+  return data;
+}
+function notice(text){ $("notice").textContent = text || ""; }
+
+async function loadApis(){
+  apis = await apiFetch("/api/apis");
+  const list = $("apiList");
+  list.replaceChildren();
+  if (!apis.length) {
+    const empty = document.createElement("p");
+    empty.className = "small";
+    empty.textContent = "No APIs yet. Add your first API below.";
+    list.append(empty);
+    return;
+  }
+  apis.forEach(api => {
+    const card = document.createElement("div");
+    card.className = "api";
+    const title = document.createElement("strong");
+    title.textContent = api.name;
+    const url = document.createElement("div");
+    url.className = "small";
+    url.textContent = api.method + " · " + api.url;
+    const actions = document.createElement("div");
+    actions.className = "row";
+    const use = document.createElement("button");
+    use.textContent = "SELECT API";
+    use.onclick = () => {
+      selected = api;
+      $("requestPanel").classList.remove("hidden");
+      $("selectedName").textContent = api.name;
+      $("response").textContent = "The response will appear here.";
+      $("responseMeta").textContent = "";
+      $("requestPanel").scrollIntoView({behavior:"smooth",block:"start"});
+    };
+    const remove = document.createElement("button");
+    remove.textContent = "REMOVE";
+    remove.className = "danger";
+    remove.onclick = async () => {
+      if (!confirm("Remove " + api.name + "?")) return;
+      try {
+        await apiFetch("/api/apis/" + api.id, {method:"DELETE"});
+        if (selected && selected.id === api.id) {
+          selected = null;
+          $("requestPanel").classList.add("hidden");
+        }
+        await loadApis();
+        notice("API removed.");
+      } catch(e) { notice(e.message); }
+    };
+    actions.append(use,remove);
+    card.append(title,url,actions);
+    list.append(card);
+  });
+}
+
+function showDashboard(){
+  $("loginPanel").classList.add("hidden");
+  $("dashboard").classList.remove("hidden");
+}
+async function checkSession(){
+  try {
+    const s = await apiFetch("/api/session");
+    if (s.logged_in) {
+      showDashboard();
+      await loadApis();
+    }
+  } catch(e) {}
+}
+$("loginForm").onsubmit = async e => {
+  e.preventDefault(); notice("");
+  try {
+    await apiFetch("/api/login", {
+      method:"POST",
+      body:JSON.stringify({password:$("password").value})
+    });
+    $("password").value = "";
+    showDashboard();
+    await loadApis();
+    notice("Login successful.");
+  } catch(err) { notice(err.message); }
+};
+$("logout").onclick = async () => {
+  try { await apiFetch("/api/logout",{method:"POST"}); } catch(e) {}
+  selected = null;
+  $("dashboard").classList.add("hidden");
+  $("requestPanel").classList.add("hidden");
+  $("loginPanel").classList.remove("hidden");
+  notice("Logged out.");
+};
+$("addForm").onsubmit = async e => {
+  e.preventDefault(); notice("");
+  try {
+    await apiFetch("/api/apis", {
+      method:"POST",
+      body:JSON.stringify({
+        name:$("apiName").value.trim(),
+        url:$("apiUrl").value.trim(),
+        method:$("method").value
+      })
+    });
+    $("addForm").reset();
+    await loadApis();
+    notice("API added successfully.");
+  } catch(err) { notice(err.message); }
+};
+$("send").onclick = async () => {
+  if (!selected || busy) return;
+  busy = true;
+  $("send").disabled = true;
+  $("response").textContent = "Waiting for API response...";
+  $("responseMeta").textContent = "";
+  notice("");
+  try {
+    const result = await apiFetch("/api/test/" + selected.id, {
+      method:"POST",
+      body:JSON.stringify({message:$("message").value})
+    });
+    $("responseMeta").textContent =
+      "HTTP " + result.status + " · " + result.elapsed_ms + " ms · " +
+      (result.content_type || "unknown content type");
+    // Display the response body as text; do not execute returned HTML/JS.
+    $("response").textContent = result.response;
+  } catch(err) {
+    $("response").textContent = err.message;
+    notice("The request failed or the server could not retrieve the API response.");
+  } finally {
+    busy = false;
+    $("send").disabled = false;
+  }
+};
+checkSession();
+</script>
+</body>
+</html>
